@@ -1,0 +1,9 @@
+import { Document } from 'mongoose';
+export interface BatteryInterface extends Document {
+  readonly dealerName: string;
+  readonly batteryType: string;
+  readonly batterySerialNumber: number;
+  readonly status: string;
+  readonly createdDateTime: Date;
+  readonly updatedDateTime: Date;
+}
