@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -6,14 +6,37 @@ import { BatterySchema } from './schema/battery.schema';
 import { BatteryService } from './service/battery/battery.service';
 import { BatteryController } from './controller/battery/battery.controller';
 
+import { LoggerMiddleware } from './middleware/logger.middleware';
+
+import { ConfigModule } from '@nestjs/config';
+import appconfig from './config/app/app.config';
+import dbconfig from './config/app/db.config';
+console.log(`src/config/env/${(process.env.NODE_ENV || 'local').toLowerCase()}.env`)
+
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017', {
-      dbName: 'batterydatabase',
+    ConfigModule.forRoot({
+      envFilePath: `src/config/env/${(process.env.NODE_ENV || 'local').toLowerCase()}.env`,
+      isGlobal: true ,
+      load: [appconfig,dbconfig]   
+}),  
+    MongooseModule.forRoot(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}`, 
+    {
+      dbName: `${process.env.DB_NAME}`,
     }),
     MongooseModule.forFeature([{ name: 'Battery', schema: BatterySchema }]),
+    
+
+  
   ],
   controllers: [AppController, BatteryController],
   providers: [AppService, BatteryService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('battery');
+  }
+}

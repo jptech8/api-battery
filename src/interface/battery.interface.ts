@@ -4,6 +4,6 @@ export interface BatteryInterface extends Document {
   readonly batteryType: string;
   readonly batterySerialNumber: number;
   readonly status: string;
-  readonly createdDateTime: Date;
-  readonly updatedDateTime: Date;
+  readonly createdDateTime: string;
+  readonly updatedDateTime: string;
 }
