@@ -11,12 +11,11 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { ConfigModule } from '@nestjs/config';
 import appconfig from './config/app/app.config';
 import dbconfig from './config/app/db.config';
-console.log(`src/config/env/${(process.env.NODE_ENV || 'local').toLowerCase()}.env`)
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `src/config/env/${(process.env.NODE_ENV || 'local').toLowerCase()}.env`,
+      envFilePath: `src/config/env/${(process.env.NODE_ENV || 'dev').toLowerCase()}.env`,
       isGlobal: true ,
       load: [appconfig,dbconfig]   
 }),  
