@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Put,
@@ -12,10 +13,12 @@ import {
 import { CreateBatteryDto } from 'src/dto/create-battery.dto';
 import { UpdateBatteryDto } from 'src/dto/update-battery.dto';
 import { BatteryService } from 'src/service/battery/battery.service';
+import {AppLogger} from 'src/utility/logger/app.logger' 
+
 
 @Controller('battery')
 export class BatteryController {
-  constructor(private readonly batteryService: BatteryService) {}
+  constructor(private readonly batteryService: BatteryService,private readonly logger: AppLogger) {}
 
   @Post()
   async createBattery(
@@ -24,6 +27,8 @@ export class BatteryController {
   ) {
     try {
       const data = await this.batteryService.createBattery(createBatteryDto);
+
+      this.logger.debug("fff")
       return response.status(HttpStatus.CREATED).json({
         message: 'Record has been created successfully',
         data,

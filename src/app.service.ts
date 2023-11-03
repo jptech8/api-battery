@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
 
-  getHello ():  {
+  getPing ():  {
     name:string;
     service:string;
     date:Date;

@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Logger,Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,6 +11,8 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { ConfigModule } from '@nestjs/config';
 import appconfig from './config/app/app.config';
 import dbconfig from './config/app/db.config';
+
+import {AppLogger} from './utility/logger/app.logger' 
 
 @Module({
   imports: [
@@ -29,13 +31,13 @@ import dbconfig from './config/app/db.config';
   
   ],
   controllers: [AppController, BatteryController],
-  providers: [AppService, BatteryService],
+  providers: [AppService, BatteryService,AppLogger,
+    Logger,],
+    exports: [AppLogger],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes('battery');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
+
