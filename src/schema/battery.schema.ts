@@ -2,7 +2,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Battery {
-  @Prop()
+
+  
+  @Prop({required: true,index: 'text' })
   dealerName: string;
   @Prop()
   batteryType: string;
@@ -12,8 +14,8 @@ export class Battery {
   status: string;
   @Prop()
   createdDateTime: Date;
-  @Prop()
+  @Prop() 
   updatedDateTime: Date;
 }
 
-export const BatterySchema = SchemaFactory.createForClass(Battery);
+export const BatterySchema = SchemaFactory.createForClass(Battery); 

@@ -1,14 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException,Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BatteryInterface } from 'src/interface/battery.interface';
 import { CreateBatteryDto } from 'src/dto/create-battery.dto';
 import { UpdateBatteryDto } from 'src/dto/update-battery.dto';
-
+import {AppLogger} from 'src/utility/logger/app.logger' 
 @Injectable()
 export class BatteryService {
   constructor(
-    @InjectModel('Battery') private batteryModel: Model<BatteryInterface>,
+    @InjectModel('Battery') private batteryModel: Model<BatteryInterface>,private readonly logger: AppLogger
   ) {}
 
   async createBattery(
@@ -38,7 +38,16 @@ export class BatteryService {
     }
     return exist;
   }
-
+  async searchBattery(dealerName:string) {
+    const data = await this.batteryModel.find({ $text: { $search: dealerName }})
+    this.logger.debug(data)
+    console.log(data)
+    if(!data){
+      throw new NotFoundException(`No data found`);
+    }
+    return data;
+  }
+  
   async getAllBattery(): Promise<BatteryInterface[]> {
     const data = await this.batteryModel.find();
     if (!data || data.length == 0) {
@@ -46,6 +55,7 @@ export class BatteryService {
     }
     return data;
   }
+
   async deleteBattery(uid: string): Promise<BatteryInterface> {
     const data = await this.batteryModel.findByIdAndDelete(uid);
     if (!data) {

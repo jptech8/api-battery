@@ -28,7 +28,7 @@ export class BatteryController {
     try {
       const data = await this.batteryService.createBattery(createBatteryDto);
 
-      this.logger.debug("fff")
+      
       return response.status(HttpStatus.CREATED).json({
         message: 'Record has been created successfully',
         data,
@@ -92,6 +92,19 @@ export class BatteryController {
       const data = await this.batteryService.deleteBattery(uid);
       return response.status(HttpStatus.OK).json({
         message: 'Deleted successfully',
+        data,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Post('/search/:id')
+  async searchBattery(@Res() response, @Param('id') dealerName: string) {
+    try {
+      const data = await this.batteryService.searchBattery(dealerName);
+      return response.status(HttpStatus.OK).json({
+        message: 'Found successfully',
         data,
       });
     } catch (err) {
